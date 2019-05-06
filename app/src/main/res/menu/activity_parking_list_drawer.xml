@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_search_parking_places"
+            android:icon="@drawable/search_24dp"
+            android:title="@string/nav_search_parking_places1" />
+        <item
+            android:id="@+id/nav_access_parking"
+            android:icon="@drawable/streetview_24dp"
+            android:title="@string/nav_access_parking1" />
+        <item
+            android:id="@+id/nav_map_parking"
+            android:icon="@drawable/map_24dp"
+            android:title="@string/nav_see_parking1" />
+        <item
+            android:id="@+id/nav_validate_entry"
+            android:icon="@drawable/perm_identity_24dp"
+            android:title="@string/nav_validate_entry1" />
+    </group>
+
+</menu>

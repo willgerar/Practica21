@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Universidad Rovira i Virgili</string>
+    <string name="title_activity_parking_selection">Universidad Rovira i Virgili</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_subtitle">www.urv.cat/ca/</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+
+    <string name="mainTitle1">Lista parkings</string>
+
+    <string name="textTitle1">ha seleccionado el ...</string>
+    <string name="selectionTitle1"> </string>
+    <string name="textState1">FULL</string>
+
+    <string name="titleQr1">generar códigos QR... </string>
+    <string name="edTxt1"> </string>
+    <string name="btnGenerate1">generar</string>
+    <string name="mImageView1"> </string>
+
+
+    <string name="titleEntryP1">Plantas Parking</string>
+
+
+    <string name="titleDetailFloor1">Detalles Planta</string>
+    <string name="mNameFloor1">Name</string>
+    <string name="mNameDetailFloor1"></string>
+
+
+    <string name="common1">Normal</string>
+    <string name="electric1">Electrico</string>
+    <string name="disabled1">Discapacitado</string>
+    <string name="bike1">Bici</string>
+    <string name="motorbike1">Moto</string>
+
+
+    <string name="titleMotorcycle1">Detalle Motos</string>
+
+    <string name="tilteBike1">Detalle Bibicletas</string>
+
+
+    <string name="nav_validate_entry1">Validar entrada</string>
+    <string name="nav_access_parking1">Visitar parking</string>
+    <string name="nav_see_parking1">Ver mapa</string>
+    <string name="nav_search_parking_places1">Buscar plazas parking</string>
+
+    <string name="nav_motorcycle1">Motos</string>
+    <string name="nav_bicycle1">Bicicletas</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_map_parking">Map</string>
+
+
+</resources>
