@@ -13,18 +13,22 @@
     <string name="selectionTitle1"> </string>
     <string name="textState1">FULL</string>
 
-    <string name="titleQr1">generar códigos QR... </string>
+    <string name="titleQr1">QR Code ... </string>
     <string name="edTxt1"> </string>
     <string name="btnGenerate1">generar</string>
     <string name="mImageView1"> </string>
 
 
     <string name="titleEntryP1">Plantas Parking</string>
-
+    <string name="floorName1">name</string>
+    <string name="numberSlotFloor1"> </string>
 
     <string name="titleDetailFloor1">Detalles Planta</string>
-    <string name="mNameFloor1">Name</string>
-    <string name="mNameDetailFloor1"></string>
+    <string name="slotName1">Name</string>
+    <string name="availableSlot1">OCCUPPED</string>
+
+
+
 
 
     <string name="common1">Normal</string>

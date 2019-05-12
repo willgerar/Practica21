@@ -29,8 +29,9 @@
         <activity
             android:name=".FloorListActivity"
             android:parentActivityName=".ParkingListActivity" />
-        <activity android:name=".DetailFloorActivity"
-            android:parentActivityName=".FloorListActivity"/>
+        <activity
+            android:name=".DetailFloorActivity"
+            android:parentActivityName=".FloorListActivity" />
         <activity
             android:name=".SlotSearchActivity"
             android:parentActivityName=".ParkingListActivity" />
@@ -48,6 +49,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
 
     </application>
 

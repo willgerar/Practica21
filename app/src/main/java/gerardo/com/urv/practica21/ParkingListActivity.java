@@ -1,6 +1,9 @@
 package gerardo.com.urv.practica21;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,11 +22,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import cat.tomasgis.app.providers.parkingprovider.contracts.ModelContracts;
 import cat.tomasgis.module.communication.CommManager;
 import cat.tomasgis.module.communication.base.AppURL;
 import cat.tomasgis.module.communication.listeners.IDataReceiver;
 import cat.tomasgis.module.communication.listeners.StringResponseListener;
+import gerardo.com.urv.practica21.Models.Floor;
 import gerardo.com.urv.practica21.Models.Parking;
+import gerardo.com.urv.practica21.Models.Slot;
 
 public class ParkingListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IDataReceiver {
@@ -105,8 +112,8 @@ public class ParkingListActivity extends AppCompatActivity
     }
 
     /**
-     * Método recibe datos del web y muestra los parkings que están añadidos
-     * @param data datos del web
+     * Método recibe datos del servidor y muestra los parkings que están añadidos
+     * @param data datos del servidor
      */
     @Override
     public void onReceiveData(String data) {
@@ -123,13 +130,71 @@ public class ParkingListActivity extends AppCompatActivity
                     mList.add(name);
                     mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mList);
                     mListView.setAdapter(mAdapter);
+                    clearAllData();
+                    createBaseData();
                 }
             }
 
         }
     }
 
+    protected void clearAllData(){
+        int numberElementsDeleted;
+        ContentResolver contentResolver = this.getContentResolver();
 
+        //Slots
+        numberElementsDeleted = getContentResolver().delete(ModelContracts.SlotModel.buildContentUri(), null, null);
+        Log.d(TAG, String.format("erasing slots %d", numberElementsDeleted));
+
+        //Floors
+        numberElementsDeleted = getContentResolver().delete(ModelContracts.FloorModel.buildContentUri(), null , null);
+        Log.d(TAG, String.format("erasing floors %d", numberElementsDeleted ));
+
+        //Location
+        numberElementsDeleted = getContentResolver().delete(ModelContracts.LocationModel.buildContentUri(), null, null);
+        Log.d(TAG, String.format("erasing locations %d", numberElementsDeleted));
+
+        //Parking
+        numberElementsDeleted = getContentResolver().delete(ModelContracts.ParkingModel.buildContentUri(), null, null);
+        Log.d(TAG, String.format("erasing parking %d", numberElementsDeleted));
+    }
+
+    protected  void createBaseData() {
+        int i = 0;
+        ContentResolver contentResolver = this.getContentResolver();
+        ContentValues contentValuesParking;
+        ContentValues contentValuesFloor;
+        ContentValues contentValuesSlot;
+        ContentValues contentValuesLocation;
+
+        while(i<3){
+            contentValuesParking = ContentValuesUtils.modelToContentValuesP(parking[i]);
+            Uri insertUri;
+            for(Floor floor: parking[i].getFloors()){
+                contentValuesFloor = ContentValuesUtils.modelToContentValuesF(floor);
+                //insertFloor
+                insertUri = contentResolver.insert(ModelContracts.FloorModel.buildContentUri(), contentValuesFloor);
+                Log.d(TAG, String.format("insert floor %s", insertUri.toString()));
+
+                for(Slot slot: floor.getSlots()){
+                    contentValuesSlot = ContentValuesUtils.modelToContentValuesS(slot, floor.getCompany_number());
+                    //insert Slots
+                    insertUri = contentResolver.insert(ModelContracts.SlotModel.buildContentUri(), contentValuesSlot);
+                    Log.d(TAG, String.format("insert slot %s", insertUri.toString()));
+                }
+
+                contentValuesLocation = ContentValuesUtils.modelToContentValuesL(parking[i].getLocation(), parking[i].getName());
+                //insert location
+                insertUri = contentResolver.insert(ModelContracts.LocationModel.buildContentUri(), contentValuesLocation);
+                Log.d(TAG, String.format("insert location %s", insertUri.toString()));
+            }
+
+            //insert parking
+            insertUri = contentResolver.insert(ModelContracts.ParkingModel.buildContentUri(), contentValuesParking);
+            Log.d(TAG, String.format("insert parking %s", insertUri.toString()));
+            i++;
+        }
+    }
 
 
 }
