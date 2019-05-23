@@ -8,6 +8,12 @@
 
 
     <string name="mainTitle1">Lista parkings</string>
+    <string name="mNamesParkings1">name parking </string>
+
+    <string name="mSlotName1">name</string>
+    <string name="mSlotFree1">free</string>
+    <string name="mSlotDisabled1">state</string>
+
 
     <string name="textTitle1">ha seleccionado el ...</string>
     <string name="selectionTitle1"> </string>
@@ -25,17 +31,15 @@
 
     <string name="titleDetailFloor1">Detalles Planta</string>
     <string name="slotName1">Name</string>
-    <string name="availableSlot1">OCCUPPED</string>
+    <string name="availableSlot1"> </string>
 
 
-
-
-
-    <string name="common1">Normal</string>
-    <string name="electric1">Electrico</string>
-    <string name="disabled1">Discapacitado</string>
+    <string name="common1">Norma</string>
+    <string name="electric1">Electric</string>
+    <string name="disabled1">Discapacitad</string>
     <string name="bike1">Bici</string>
     <string name="motorbike1">Moto</string>
+    <string name="all1">Todo</string>
 
 
     <string name="titleMotorcycle1">Detalle Motos</string>
@@ -51,7 +55,12 @@
     <string name="nav_motorcycle1">Motos</string>
     <string name="nav_bicycle1">Bicicletas</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_map_parking">Map</string>
+
+
+
+    <string name="mSlot_TypePrueba">name type</string>
+    <string name="mSlot_StatePrueba">name state</string>
+    <string name="mSlot_ColorPrueba">name color</string>
 
 
 </resources>

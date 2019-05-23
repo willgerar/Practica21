@@ -25,11 +25,17 @@ public class DetailFloorActivity extends AppCompatActivity {
 
         mContext = this.getApplicationContext();
 
+        String idFloor = getIntent().getExtras().getString(ModelContracts.SlotModel.FLOOR_ID);//rewiev lo que me estan pasando
+
+        String selection = ModelContracts.SlotModel.FLOOR_ID + "=?";
+        String []selectionArgs = {idFloor};
+
         Cursor cursor = this.getContentResolver().query(ModelContracts.SlotModel.buildContentUri(),
-                ModelContracts.SlotModel.DEFAULT_PROJECTIONS, null, null,
+                ModelContracts.SlotModel.DEFAULT_PROJECTIONS, selection, selectionArgs,
                 ModelContracts.SlotModel.DEFAULT_SORT);
 
         SlotListAdapter mAdapter = new SlotListAdapter (mContext, cursor);
         ((ListView)this.findViewById(R.id.listDetail)).setAdapter((mAdapter));
+
     }
 }

@@ -1,5 +1,7 @@
 package gerardo.com.urv.practica21.Models;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 public class Slot {
@@ -77,6 +79,7 @@ public class Slot {
         this.state_change_date = state_change_date;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Slot{" +

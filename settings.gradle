@@ -1,1 +1,1 @@
-include ':app', ':commManager', ':parkingprovider'
+include ':app', ':commManager', ':parkingProvider'

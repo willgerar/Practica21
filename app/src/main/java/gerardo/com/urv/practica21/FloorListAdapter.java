@@ -2,6 +2,7 @@ package gerardo.com.urv.practica21;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,11 @@ import cat.tomasgis.app.providers.parkingprovider.contracts.ModelContracts;
 
 public class FloorListAdapter extends BaseAdapter {
 
+
     private Context mContext;
     private static final String TAG = FloorListAdapter.class.getSimpleName();
     Cursor mData;
+
 
     public FloorListAdapter (Context context, Cursor data){
         if (context == null) Log.e(TAG, "null");
@@ -41,12 +44,14 @@ public class FloorListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int pos, View view, ViewGroup parent) {
         if(view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.adapter_floor_list, null);
         }
 
-        mData.moveToPosition(position);
+        mData.moveToPosition(pos);
+
+        view.setTag(mData.getString(mData.getColumnIndexOrThrow(ModelContracts.FloorModel.ID)));//seleccionar the floor that selection
 
         String name = mData.getString(mData.getColumnIndex(ModelContracts.FloorContract.NAME));
 

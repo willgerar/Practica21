@@ -1,10 +1,7 @@
 package gerardo.com.urv.practica21;
 
-import android.accessibilityservice.GestureDescription;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,23 +11,21 @@ import android.widget.TextView;
 
 import cat.tomasgis.app.providers.parkingprovider.contracts.ModelContracts;
 
-public class SlotListAdapter extends BaseAdapter{
+public class ParkingListAdapter extends BaseAdapter {
 
-    private Context mContext;
-    private static final String TAG = SlotListAdapter.class.getSimpleName();
+    private final static String TAG = ParkingListAdapter.class.getSimpleName();
     Cursor mData;
+    Context mContext;
 
-    public SlotListAdapter(Context context, Cursor data) {
+    public ParkingListAdapter(Context context, Cursor data) {
         if(context == null) Log.e(TAG, "null");
-            mContext = context;
-            mData = data;
-
+        mContext = context;
+        mData = data;
     }
 
     @Override
     public int getCount() {
         if(mData == null) return 0;
-
         return mData.getCount();
     }
 
@@ -47,14 +42,16 @@ public class SlotListAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if(view == null){
-            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_slot_list, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.adapter_parking_list, null);
         }
         mData.moveToPosition(position);
 
-        String name = mData.getString(mData.getColumnIndex(ModelContracts.SlotContract.NAME));
-        ((TextView) view.findViewById(R.id.slotName)).setText(name);
+        view.setTag(mData.getString(mData.getColumnIndexOrThrow(ModelContracts.ParkingModel.ID)));//seleccionar the floor that selection
 
-        //cursor.close();
+        String name = mData.getString(mData.getColumnIndex(ModelContracts.ParkingModel.NAME));
+
+        ((TextView) view.findViewById(R.id.mNamesParkings)).setText(name);
+
         return view;
     }
 }

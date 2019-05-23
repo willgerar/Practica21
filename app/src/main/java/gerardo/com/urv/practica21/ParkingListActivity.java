@@ -2,7 +2,9 @@ package gerardo.com.urv.practica21;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,6 +34,7 @@ import cat.tomasgis.module.communication.listeners.StringResponseListener;
 import gerardo.com.urv.practica21.Models.Floor;
 import gerardo.com.urv.practica21.Models.Parking;
 import gerardo.com.urv.practica21.Models.Slot;
+//import gerardo.com.urv.practica21.Search.ParkingListAdapter;
 
 public class ParkingListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IDataReceiver {
@@ -38,10 +43,12 @@ public class ParkingListActivity extends AppCompatActivity
     StringResponseListener responseListener = new StringResponseListener(this);
 
     private ListView mListView;// declarar mi lista
+
     private List<String> mList = new ArrayList<>();//declarar e instanciar array de strings
     private ArrayAdapter<String> mAdapter; // declarar un array de listas
 
     private Parking[] parking;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +57,37 @@ public class ParkingListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mListView = findViewById(R.id.listparkings);
 
-        CommManager.initializeQueu(this);;
+        CommManager.initializeQueu(this);
         if(!CommManager.callRequest(AppURL.PARKING_URL, responseListener)){
             Toast.makeText(this, "error conexión ", Toast.LENGTH_SHORT).show();
         }
+
+
+        ((ListView)this.findViewById(R.id.listparkings)).setAdapter(null);
+
+        mContext = this.getApplicationContext();
+
+        Cursor cursor = this.getContentResolver().query(ModelContracts.ParkingModel.buildContentUri(),
+                ModelContracts.ParkingModel.DEFAULT_PROJECTIONS,
+                null, null, ModelContracts.ParkingModel.DEFAULT_SORT);
+
+        ParkingListAdapter mAdapter = new ParkingListAdapter(mContext, cursor);
+        mListView = findViewById(R.id.listparkings);
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String idParking = (String) view.getTag();//con esta línea elegir el id del parking
+                Intent mIntent = new Intent(ParkingListActivity.this, FloorListActivity.class);
+                mIntent.putExtra(ModelContracts.FloorModel.PARKING_ID, idParking);//pasa a la activity el id del parking
+                startActivity(mIntent);
+            }
+        });
+
+
+
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -87,9 +119,6 @@ public class ParkingListActivity extends AppCompatActivity
         if (id == R.id.nav_search_parking_places) {
             Intent intent = new Intent(ParkingListActivity.this, SlotSearchActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_access_parking) {
-            Intent intent = new Intent(ParkingListActivity.this, FloorListActivity.class);
-            startActivity(intent);
         } else if (id == R.id.nav_map_parking) {
             Intent intent = new Intent(ParkingListActivity.this, MapParkingActivity.class);
             startActivity(intent);
@@ -97,14 +126,6 @@ public class ParkingListActivity extends AppCompatActivity
             Intent intent = new Intent(ParkingListActivity.this, ValidateActivity.class);
             startActivity(intent);
         }
-
-        /*else if (id == R.id.nav_motorcycle) {
-            Intent intent = new Intent(ParkingListActivity.this, MotorcycleActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_bicycle) {
-            Intent intent = new Intent(ParkingListActivity.this, BicycleActivity.class);
-            startActivity(intent);
-        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -117,24 +138,27 @@ public class ParkingListActivity extends AppCompatActivity
      */
     @Override
     public void onReceiveData(String data) {
-        /*Bundle params = getIntent().getExtras();
-        int*/
+
         if(data != null){
             if(data.length() > 0){
                 Toast.makeText(this, "Recibiendo...", Toast.LENGTH_SHORT).show();
 
                 Gson gson = new Gson();
                 parking = gson.fromJson(data, Parking[].class);//objeto que nos dscargamos aquí es el parkings
-                for(int i=0; i<parking.length; i++){
+                clearAllData();
+                createBaseData();
+
+
+                /*for(int i=0; i<parking.length; i++){
                     String name = parking[i].getName();
                     mList.add(name);
                     mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mList);
                     mListView.setAdapter(mAdapter);
+
                     clearAllData();
                     createBaseData();
-                }
+                }*/
             }
-
         }
     }
 
@@ -167,17 +191,17 @@ public class ParkingListActivity extends AppCompatActivity
         ContentValues contentValuesSlot;
         ContentValues contentValuesLocation;
 
-        while(i<3){
+        while(i<parking.length){
             contentValuesParking = ContentValuesUtils.modelToContentValuesP(parking[i]);
             Uri insertUri;
             for(Floor floor: parking[i].getFloors()){
-                contentValuesFloor = ContentValuesUtils.modelToContentValuesF(floor);
+                contentValuesFloor = ContentValuesUtils.modelToContentValuesF(floor, parking[i].getId());
                 //insertFloor
                 insertUri = contentResolver.insert(ModelContracts.FloorModel.buildContentUri(), contentValuesFloor);
                 Log.d(TAG, String.format("insert floor %s", insertUri.toString()));
 
                 for(Slot slot: floor.getSlots()){
-                    contentValuesSlot = ContentValuesUtils.modelToContentValuesS(slot, floor.getCompany_number());
+                    contentValuesSlot = ContentValuesUtils.modelToContentValuesS(slot, floor.getId());
                     //insert Slots
                     insertUri = contentResolver.insert(ModelContracts.SlotModel.buildContentUri(), contentValuesSlot);
                     Log.d(TAG, String.format("insert slot %s", insertUri.toString()));
@@ -197,4 +221,25 @@ public class ParkingListActivity extends AppCompatActivity
     }
 
 
+
+
+    protected void querySlotFromName(int id){
+        ContentResolver contentResolver = this.getContentResolver();
+
+        String defaulOrder = ModelContracts.SlotModel.DEFAULT_SORT;
+        String projections[] = ModelContracts.SlotModel.DEFAULT_PROJECTIONS;
+        String selection = ModelContracts.SlotModel.buildFloorSelection();
+        String selectionArgs[] = ModelContracts.SlotModel.buildFloorSelectionArgs("F1");
+
+        Cursor cursor = contentResolver.query(ModelContracts.SlotModel.buildContentUri(), projections, selection,
+                selectionArgs, defaulOrder);
+
+        String[] namePrueba = cursor.getColumnNames();
+
+        Log.d(TAG, String.format("names of elements %s", namePrueba));
+
+    }
+
 }
+
+

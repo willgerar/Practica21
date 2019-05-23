@@ -9,10 +9,6 @@
             android:icon="@drawable/search_24dp"
             android:title="@string/nav_search_parking_places1" />
         <item
-            android:id="@+id/nav_access_parking"
-            android:icon="@drawable/streetview_24dp"
-            android:title="@string/nav_access_parking1" />
-        <item
             android:id="@+id/nav_map_parking"
             android:icon="@drawable/map_24dp"
             android:title="@string/nav_see_parking1" />
